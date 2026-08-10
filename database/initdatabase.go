@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"fmt"
-	"log"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -90,6 +89,5 @@ func RunMigration(ctx context.Context, pool *pgxpool.Pool) error {
 	if err != nil {
 		return fmt.Errorf("migration execution failed: %w", err)
 	}
-	log.Println("Schema migration executed successfully.")
 	return nil
 }

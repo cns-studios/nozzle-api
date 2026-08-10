@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
+	"net/http"
 	"nozzle-api/database"
 	"os"
 
 	"nozzle-api/utils"
 
+	"github.com/gorilla/mux"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
@@ -22,8 +24,21 @@ func main() {
 	if err != nil {
 		utils.LogError("Database connection failed: %v", err)
 		return
+	} else {
+		utils.LogInfo("Database connection established")
 	}
 	defer pool.Close()
-
 	database.RunMigration(context.Background(), pool)
+	if os.Getenv("PORT") == "" {
+		utils.LogError("PORT environment variable is not set")
+		return
+	}
+
+	router := mux.NewRouter()
+
+	router.HandleFunc("/health", utils.IsHealthy).Methods(http.MethodGet)
+
+	if err := http.ListenAndServe(":"+os.Getenv("PORT"), router); err != nil {
+		utils.LogError("Server failed: %v", err)
+	}
 }
