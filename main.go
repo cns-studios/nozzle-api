@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"nozzle-api/database"
+	"nozzle-api/github-bot"
 	"os"
 
 	"nozzle-api/utils"
@@ -36,7 +37,8 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/health", utils.IsHealthy).Methods(http.MethodGet)
+	router.HandleFunc("/api", utils.IsHealthy).Methods(http.MethodGet)
+	router.HandleFunc("/api/repositories/{userid}", github_bot.GetAllrepos).Methods(http.MethodGet)
 
 	if err := http.ListenAndServe(":"+os.Getenv("PORT"), router); err != nil {
 		utils.LogError("Server failed: %v", err)

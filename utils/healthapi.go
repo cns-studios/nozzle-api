@@ -5,5 +5,5 @@ import (
 )
 
 func IsHealthy(w http.ResponseWriter, r *http.Request) {
-	writeJSON(w, http.StatusOK, map[string]interface{}{"health": "ok"})
+	WriteJSON(w, http.StatusOK, map[string]interface{}{"status": "ok"})
 }
